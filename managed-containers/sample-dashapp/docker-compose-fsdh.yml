@@ -8,15 +8,13 @@ services:
       POSTGRES_DB: your_db_name
       POSTGRES_USER: your_user
       POSTGRES_PASSWORD: your_password
-    volumes:
-      - ${WEBAPP_STORAGE_HOME}/sql/data.sql:/docker-entrypoint-initdb.d/data.sql
     ports:
       - "5432:5432"
 
   web:
     build: 
-      context: .
-      dockerfile: Dockerfile
+      context: https://github.com/KingBain/datahub-images.git
+      dockerfile: managed-containers/sample-dashapp/Dockerfile
     container_name: dash-app
     ports:
       - "80:80"
