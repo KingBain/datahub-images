@@ -69,6 +69,25 @@ RUN pwsh -Command \
     Install-Module -Name Az -RequiredVersion 14.0.0 -Scope AllUsers -Repository PSGallery -Force -AllowClobber; \
     Install-Module -Name SqlServer -RequiredVersion 22.3.0 -Scope AllUsers -Repository PSGallery -Force -AllowClobber"
 
+# Begin - Temporary mitigation for  Azure CLI
+# GHSA-6q48-6c7w-9gw2
+RUN /opt/az/bin/python3 -m pip install \
+    --no-cache-dir \
+    --upgrade pip
+
+COPY requirements.txt /tmp/requirements.txt
+
+RUN /opt/az/bin/python3 -m pip install \
+    --no-cache-dir \
+    --upgrade \
+    -r /tmp/requirements.txt \
+    && /opt/az/bin/python3 -m pip check
+# END
+
+# Remove unused Pebble service manager inherited from Ubuntu 26.04.
+# Pebble contains vulnerable Go standard-library components.
+RUN rm -f /usr/bin/pebble
+
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
