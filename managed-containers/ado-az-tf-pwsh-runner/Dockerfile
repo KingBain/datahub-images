@@ -60,6 +60,7 @@ RUN curl -fsSL https://apt.releases.hashicorp.com/gpg -o /tmp/hashicorp.gpg && \
 
 # Install addon packages
 RUN apt-get update && \
+    ACCEPT_EULA=Y \
     xargs -a /tmp/addon_packages.list apt-get install -y --no-install-recommends && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
